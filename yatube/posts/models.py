@@ -13,6 +13,10 @@ class Group(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        verbose_name = 'Группа'
+        verbose_name_plural = 'Группы'
+
 
 class Post(CreatedModel):
     group = models.ForeignKey(
@@ -75,6 +79,10 @@ class Comment(models.Model):
     def __str__(self):
         return self.text
 
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
+
 
 class Follow(models.Model):
     user = models.ForeignKey(
@@ -92,3 +100,10 @@ class Follow(models.Model):
 
     class Meta:
         verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'
+        constraints = [
+            models.UniqueConstraint(
+                name="%(app_label)s_%(class)s_name_unique",
+                fields=['author'],
+            ),
+        ]

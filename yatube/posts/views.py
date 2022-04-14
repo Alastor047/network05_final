@@ -6,15 +6,14 @@ from django.http import HttpRequest
 from django.shortcuts import get_object_or_404, redirect, render
 
 from posts.forms import CommentForm, PostForm
-from posts.models import Group, Post, Follow, User
-
+from posts.models import Follow, Group, Post, User
 
 ORDER_SORT = 10
 
 
 def index(request: HttpRequest) -> HttpRequest:
     """View функция главной страницы."""
-    posts = Post.objects.all()
+    posts = Post.objects.select_related('group')
     paginator = Paginator(posts, ORDER_SORT)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -57,7 +56,7 @@ def profile(request: HttpRequest, username: str) -> HttpRequest:
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     if user.is_authenticated:
-        if Follow.objects.filter(user=user, author=author).exists():
+        if Follow.objects.filter(user=user, author=author):
             following = True
     context = {
         'author': author,
@@ -163,6 +162,5 @@ def profile_unfollow(request, username):
         user=request.user,
         author=author
     )
-    if follow.exists():
-        follow.delete()
+    follow.delete()
     return redirect('posts:profile', username=author)
