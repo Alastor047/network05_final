@@ -49,20 +49,16 @@ def profile(request: HttpRequest, username: str) -> HttpRequest:
     """View функция для страницы профиля пользователя."""
     author = get_object_or_404(User, username=username)
     user = request.user
-    following = False
     posts = author.posts.all()
     posts_count = author.posts.count()
     paginator = Paginator(posts, ORDER_SORT)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    if user.is_authenticated:
-        if Follow.objects.filter(user=user, author=author):
-            following = True
     context = {
         'author': author,
         'posts_count': posts_count,
         'page_obj': page_obj,
-        'following': following,
+        'following': Follow.objects.filter(user=user, author=author).exists(),
     }
     return render(request, 'posts/profile.html', context)
 

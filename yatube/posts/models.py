@@ -1,4 +1,5 @@
-from core.models import CreatedModel
+from core.models import CreatedModel  # Вот так мне предлагает сортировщик
+
 from django.contrib.auth import get_user_model
 from django.db import models
 

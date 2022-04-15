@@ -153,7 +153,7 @@ class PostPageTests(TestCase):
                 self.assertEqual(post_example.author, self.user)
 
     def test_post_image_profile(self):
-        """Проверка картинки profile"""
+        """Проверка картинки profile."""
         response = self.author_client.get(
             reverse(
                 'posts:profile', kwargs={'username': self.user.username}
